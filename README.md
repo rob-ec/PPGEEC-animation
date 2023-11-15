@@ -37,10 +37,45 @@ _(sugestão de roteiro para incluir modelo definido no Blender em seu projeto:
 <table>
   <tr>
     <td align="center">
+      <a href="https://github.com/yarabrg" target="_blank">
+        <img loading="lazy" src="https://avatars.githubusercontent.com/u/89154264?v=4" width=115 >
+        <br>
+        <sub>Yara Silva</sub>
+      </a>
+    </td>
+    <td align="center">
       <a href="https://github.com/rob-ec" target="_blank">
         <img loading="lazy" src="https://avatars.githubusercontent.com/u/20346702?v=4" width=115 >
         <br>
         <sub>Robson Gomes</sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/luanmooraes" target="_blank">
+        <img loading="lazy" src="https://avatars.githubusercontent.com/u/65193369?v=4" width=115 >
+        <br>
+        <sub>Luan Moraes</sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/Jonatasmvb" target="_blank">
+        <img loading="lazy" src="https://avatars.githubusercontent.com/u/65560536?v=4" width=115 >
+        <br>
+        <sub>Jônatas Mendonça</sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/jonas-ar" target="_blank">
+        <img loading="lazy" src="https://avatars.githubusercontent.com/u/96082984?v=4" width=115 >
+        <br>
+        <sub>Jonas Fontenele</sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/vinic-costa" target="_blank">
+        <img loading="lazy" src="https://avatars.githubusercontent.com/u/108631277?v=4" width=115 >
+        <br>
+        <sub>Vinícius Santos</sub>
       </a>
     </td>
   </tr>
