@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Text Geometry</title>
+    <script src="https://threejs.org/build/three.js"></script>
+    <script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+
+    <script>
+        // Criação da cena, câmera e renderizador
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(150, window.innerWidth / window.innerHeight, 0.1, 1000);
+        var renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Carregamento da fonte
+        var loader = new THREE.FontLoader();
+        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+            var letters = ['P', 'P', 'G', 'E', 'E', 'C'];
+            var spacing = -20;
+
+            letters.forEach(function(letter) {
+                // Criação da geometria do texto
+                var textGeometry = new THREE.TextGeometry(letter, {
+                    font: font,
+                    size: 10,
+                    height: 2,
+                    curveSegments: 12,
+                    bevelEnabled: true,
+                    bevelThickness: 0.5,
+                    bevelSize: 0.2,
+                    bevelOffset: 0,
+                    bevelSegments: 5
+                });
+
+                var particleCount = 10000;
+                var particles = new THREE.Points(textGeometry);
+                var particleMaterial = new THREE.PointsMaterial({
+                    color: 0x0FFFFF,
+                    size: 0.01
+                });
+
+                particles.position.x = spacing;
+                scene.add(particles);
+                spacing += 20;
+            });
+        });
+
+        camera.position.z = 30;
+
+        // Adição de luzes à cena
+        var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+        scene.add(directionalLight);
+
+        // Função de animação
+        var animate = function () {
+            requestAnimationFrame(animate);
+
+            scene.children.forEach(function (child) {
+                if (child instanceof THREE.Points) {
+                    child.geometry.vertices.forEach(function (vertex) {
+                        vertex.y -= 0.1;
+                        if (vertex.y < -10) {
+                            vertex.y = 10;
+                        }
+                    });
+                    child.geometry.verticesNeedUpdate = true;
+                }
+
+                child.rotation.x += 0.005;
+                child.rotation.y += 0.005;
+            });
+
+            renderer.render(scene, camera);
+        };
+
+        animate();
+    </script>
+</body>
+</html>
