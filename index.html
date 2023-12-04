@@ -2,87 +2,99 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Three.js Text Geometry</title>
-    <script src="https://threejs.org/build/three.js"></script>
-    <script src="https://threejs.org/examples/js/loaders/FontLoader.js"></script>
+    <title>Particle System Text Example</title>
 </head>
 <body>
+    <!-- Inclui a biblioteca Three.js via CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
-
     <script>
-        // Criação da cena, câmera e renderizador
+        // Cria uma cena
         var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(150, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        // Cria uma câmera
+        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        // Cria um renderizador WebGL
         var renderer = new THREE.WebGLRenderer();
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
-        // Carregamento da fonte
+        // Configura a posição inicial da câmera
+        camera.position.z = 120;
+
+        // Carrega o carregador de fontes e a fonte desejada
         var loader = new THREE.FontLoader();
-        loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
-            var letters = ['P', 'P', 'G', 'E', 'E', 'C'];
-            var spacing = -20;
+        loader.load('https://threejs.org/examples/fonts/optimer_bold.typeface.json', function (font) {
 
-            letters.forEach(function(letter) {
-                // Criação da geometria do texto
-                var textGeometry = new THREE.TextGeometry(letter, {
-                    font: font,
-                    size: 10,
-                    height: 2,
-                    curveSegments: 12,
-                    bevelEnabled: true,
-                    bevelThickness: 0.5,
-                    bevelSize: 0.2,
-                    bevelOffset: 0,
-                    bevelSegments: 5
-                });
+            // Cria um array para armazenar as posições finais das partículas
+            var finalPositions = [];
 
-                var particleCount = 10000;
-                var particles = new THREE.Points(textGeometry);
-                var particleMaterial = new THREE.PointsMaterial({
-                    color: 0x0FFFFF,
-                    size: 0.01
-                });
-
-                particles.position.x = spacing;
-                scene.add(particles);
-                spacing += 20;
+            // Cria a geometria do texto
+            var textGeometry = new THREE.TextGeometry('PPGEEC', {
+                font: font,
+                size: 30,
+                height: 1,
+                curveSegments: 24,
+                bevelEnabled: true,
+                bevelThickness: 0.15,
+                bevelSize: 0.3,
+                bevelSegments: 5
             });
-        });
 
-        camera.position.z = 30;
+            // Armazena as posições finais das partículas
+            textGeometry.vertices.forEach(function(vertex) {
+                finalPositions.push(vertex.clone());
+            });
 
-        // Adição de luzes à cena
-        var ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
+            // Posiciona as partículas inicialmente em posições aleatórias
+            textGeometry.vertices.forEach(function(vertex) {
+                vertex.x = Math.random() * 200 - 100;
+                vertex.y = Math.random() * 200 - 100;
+                vertex.z = Math.random() * 200 - 100;
+            });
 
-        var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-        scene.add(directionalLight);
+            // Cria o material das partículas
+            var particleMaterial = new THREE.PointsMaterial({
+                color: new THREE.Color('red'), // Define a cor das partículas para vermelho
+                size: 0.3
+            });
 
-        // Função de animação
-        var animate = function () {
-            requestAnimationFrame(animate);
+            // Cria um array de cores
+            var colors = [];
+            for (var i = 0; i < textGeometry.vertices.length; i++) {
+                colors[i] = new THREE.Color(Math.random() * 0xffffff); // Define uma cor aleatória para cada partícula
+            }
 
-            scene.children.forEach(function (child) {
-                if (child instanceof THREE.Points) {
-                    child.geometry.vertices.forEach(function (vertex) {
-                        vertex.y -= 0.1;
-                        if (vertex.y < -10) {
-                            vertex.y = 10;
-                        }
-                    });
-                    child.geometry.verticesNeedUpdate = true;
+            // Atribui as cores à geometria do texto
+            textGeometry.colors = colors;
+
+            // Cria o material das partículas
+            var particleMaterial = new THREE.PointsMaterial({
+                size: 0.3,
+                vertexColors: THREE.VertexColors // Usa as cores definidas na geometria do texto
+            });
+
+            // Cria o sistema de partículas e o adiciona à cena
+            var particleSystem = new THREE.Points(textGeometry, particleMaterial);
+            scene.add(particleSystem);
+
+            // Função para animar a cena
+            var animate = function () {
+                requestAnimationFrame(animate); // Solicita a próxima renderização do quadro
+
+                // Move as partículas para suas posições finais
+                for (var i = 0; i < particleSystem.geometry.vertices.length; i++) {
+                    var particle = particleSystem.geometry.vertices[i];
+                    var finalPosition = finalPositions[i];
+                    particle.lerp(finalPosition, 0.02);
                 }
+                particleSystem.geometry.verticesNeedUpdate = true;
 
-                child.rotation.x += 0.005;
-                child.rotation.y += 0.005;
-            });
+                renderer.render(scene, camera); // Renderiza a cena com a câmera
+            };
 
-            renderer.render(scene, camera);
-        };
-
-        animate();
+            animate(); // Inicia a animação
+        });
     </script>
 </body>
 </html>
