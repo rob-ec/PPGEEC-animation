@@ -5,6 +5,9 @@
     <title>Trabalho Computação Gráfica</title>
 </head>
 <body>
+    <input type="number" id="particleCount" value="100">
+    <button onclick="updateParticles()">Atualizar Partículas</button>
+
     <!-- Inclui a biblioteca Three.js via CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
 
@@ -24,7 +27,7 @@
         document.body.appendChild(renderer.domElement);
 
         // Configura a posição inicial da câmera
-        camera.position.z = 120;
+        camera.position.z = 80;
 
         // Cria os controles de órbita
         var controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -58,12 +61,6 @@
                 vertex.x = Math.random() * 200 - 100;
                 vertex.y = Math.random() * 200 - 100;
                 vertex.z = Math.random() * 200 - 100;
-            });
-
-            // Cria o material das partículas
-            var particleMaterial = new THREE.PointsMaterial({
-                color: new THREE.Color('red'), // Define a cor das partículas para vermelho
-                size: 0.3
             });
 
             // Cria um array de cores
@@ -112,6 +109,25 @@
 
             animate(); // Inicia a animação
         });
+
+        function updateParticles() {
+            var count = document.getElementById('particleCount').value;
+
+            // Remove o sistema de partículas atual da cena
+            scene.remove(particleSystem);
+
+            // Cria um novo sistema de partículas com o número de partículas especificado
+            var particleGeometry = new THREE.Geometry();
+            for (var i = 0; i < count; i++) {
+                particleGeometry.vertices.push(new THREE.Vector3(
+                    Math.random() * 100 - 50,
+                    Math.random() * 100 - 50,
+                    Math.random() * 100 - 50
+                ));
+            }
+            particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+            scene.add(particleSystem);
+        }
     </script>
 </body>
 </html>
