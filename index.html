@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Particle System Text Example</title>
+    <title>Trabalho Computação Gráfica</title>
 </head>
 <body>
     <!-- Inclui a biblioteca Three.js via CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+
+    <!-- Inclui OrbitControls -->
+    <script src="https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/js/controls/OrbitControls.js"></script>
+    
     <script>
         // Cria uma cena
         var scene = new THREE.Scene();
@@ -21,6 +25,9 @@
 
         // Configura a posição inicial da câmera
         camera.position.z = 120;
+
+        // Cria os controles de órbita
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
         // Carrega o carregador de fontes e a fonte desejada
         var loader = new THREE.FontLoader();
@@ -81,7 +88,8 @@
             // Função para animar a cena
             var animate = function () {
                 requestAnimationFrame(animate); // Solicita a próxima renderização do quadro
-
+                // Atualiza os controles de órbita a cada quadro
+                controls.update();
                 // Move as partículas para suas posições finais
                 for (var i = 0; i < particleSystem.geometry.vertices.length; i++) {
                     var particle = particleSystem.geometry.vertices[i];
