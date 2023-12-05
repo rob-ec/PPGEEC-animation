@@ -38,10 +38,15 @@
         camera.position.z = 80;
         var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
+        // Load textures
+        var textureLoader = new THREE.TextureLoader();
+        var burguerTexture = textureLoader.load('./tex/burguer.png');
+        var sorveteTexture = textureLoader.load('./tex/sorvete.png');
+
         var particleMaterials = [
             new THREE.PointsMaterial({ size: 0.3, vertexColors: THREE.VertexColors }), // Tipo 1
-            new THREE.PointsMaterial({ size: 0.5, vertexColors: THREE.VertexColors, color: 0xff0000 }), // Tipo 2 (cor vermelha)
-            new THREE.PointsMaterial({ size: 0.7, vertexColors: THREE.VertexColors, color: 0x0000ff }) // Tipo 3 (cor vermelha)
+            new THREE.PointsMaterial({ size: 0.5, map: burguerTexture }), // Tipo 2
+            new THREE.PointsMaterial({ size: 0.9, map: sorveteTexture }) // Tipo 3
         ];
 
         var particleSystem;
