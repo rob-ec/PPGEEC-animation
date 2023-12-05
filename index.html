@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Particle System Text Example</title>
+    <title>Trabalho Computação Gráfica</title>
 </head>
 <body>
     <!-- Inclui a biblioteca Three.js via CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+
+    <!-- Inclui OrbitControls -->
+    <script src="https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/js/controls/OrbitControls.js"></script>
+    
     <script>
         // Cria uma cena
         var scene = new THREE.Scene();
@@ -21,6 +25,9 @@
 
         // Configura a posição inicial da câmera
         camera.position.z = 120;
+
+        // Cria os controles de órbita
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
 
         // Carrega o carregador de fontes e a fonte desejada
         var loader = new THREE.FontLoader();
@@ -82,12 +89,22 @@
             var animate = function () {
                 requestAnimationFrame(animate); // Solicita a próxima renderização do quadro
 
+                // Atualiza os controles de órbita a cada quadro
+                controls.update();
+
                 // Move as partículas para suas posições finais
                 for (var i = 0; i < particleSystem.geometry.vertices.length; i++) {
                     var particle = particleSystem.geometry.vertices[i];
                     var finalPosition = finalPositions[i];
                     particle.lerp(finalPosition, 0.02);
+
+                    // Se a partícula está perto o suficiente de sua posição final
+                    if (particle.distanceTo(finalPosition) < 0.1) {
+                        // Redefine a posição da partícula para um local aleatório
+                        particle.set(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50);
+                    }
                 }
+
                 particleSystem.geometry.verticesNeedUpdate = true;
 
                 renderer.render(scene, camera); // Renderiza a cena com a câmera
