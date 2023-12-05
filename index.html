@@ -88,14 +88,23 @@
             // Função para animar a cena
             var animate = function () {
                 requestAnimationFrame(animate); // Solicita a próxima renderização do quadro
+
                 // Atualiza os controles de órbita a cada quadro
                 controls.update();
+
                 // Move as partículas para suas posições finais
                 for (var i = 0; i < particleSystem.geometry.vertices.length; i++) {
                     var particle = particleSystem.geometry.vertices[i];
                     var finalPosition = finalPositions[i];
                     particle.lerp(finalPosition, 0.02);
+
+                    // Se a partícula está perto o suficiente de sua posição final
+                    if (particle.distanceTo(finalPosition) < 0.1) {
+                        // Redefine a posição da partícula para um local aleatório
+                        particle.set(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50);
+                    }
                 }
+
                 particleSystem.geometry.verticesNeedUpdate = true;
 
                 renderer.render(scene, camera); // Renderiza a cena com a câmera
